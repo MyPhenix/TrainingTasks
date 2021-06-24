@@ -44,11 +44,13 @@ namespace MultipleInheritanceTask
     {
         private ITemparatureSensor _temparatureSensor;
         private IMoistureSensor _moistureSensor;
-        public GenericSensor(ITemparatureSensor temparatureSensor,IMoistureSensor moistureSensor)
+
+        public GenericSensor(ITemparatureSensor temparatureSensor, IMoistureSensor moistureSensor)
         {
-            _temparatureSensor = temparatureSensor;
-            _moistureSensor = moistureSensor;
+            _temparatureSensor = temparatureSensor ?? throw new ArgumentNullException(nameof(temparatureSensor));
+            _moistureSensor = moistureSensor ?? throw new ArgumentNullException(nameof(moistureSensor));
         }
+
         public int GetTemparature()
         {
             return _temparatureSensor.GetTemparature();
