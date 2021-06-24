@@ -40,8 +40,25 @@ namespace MultipleInheritanceTask
     // if C.GetTemparature() => A
     // if C.IsWet() => true
     // ITemparatureSensor sensor = new GenericSensor();
-    public class GenericSensor : TemparatureSensor, MoistureSensor
+    public class GenericSensor : ITemparatureSensor, IMoistureSensor
     {
-        
+        private ITemparatureSensor _temparatureSensor;
+        private IMoistureSensor _moistureSensor;
+
+        public GenericSensor(ITemparatureSensor temparatureSensor, IMoistureSensor moistureSensor)
+        {
+            _temparatureSensor = temparatureSensor ?? throw new ArgumentNullException(nameof(temparatureSensor));
+            _moistureSensor = moistureSensor ?? throw new ArgumentNullException(nameof(moistureSensor));
+        }
+
+        public int GetTemparature()
+        {
+            return _temparatureSensor.GetTemparature();
+        }
+
+        public bool IsWet()
+        {
+            return _moistureSensor.IsWet();
+        }
     }
 }
