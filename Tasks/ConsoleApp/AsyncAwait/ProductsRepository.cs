@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace AsyncAwait
 {
@@ -39,25 +40,31 @@ namespace AsyncAwait
 
     public class ProductRepository : IRepository<Product>
     {
-        private ProductsContext productsDB = new ProductsContext();
-        public Task Delete(string id)
+        private ProductsContext _context; 
+        public ProductRepository (ProductsContext conext)
         {
-            productsDB.Remove(productsDB.ToList().Where(x => x.Id == id));
-            return Task.CompletedTask;
+            _context = conext;
         }
 
-        public Task<Product> GetById(string id)
+        public async Task Delete (string id)
         {
-            return Task.FromResult(productsDB.ToList().First(x => x.Id == id));
+             _context.Remove(await GetById(id));
         }
 
-        public Task Save(Product item)
+        public async Task<Product> GetById (string id)
         {
-            if (item != null)
-            {
-                productsDB.Add(item);                
-            }
-            return Task.CompletedTask;
+            return await _context._products.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task Save(Product item)
+        {
+            if (item is null) return;
+            await _context.AddAsync(item);
+        }
+
+        public void Dispose()
+        {
+            _context?.Dispose();
         }
     }
 }

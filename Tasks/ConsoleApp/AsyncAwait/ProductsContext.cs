@@ -3,9 +3,9 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 namespace AsyncAwait
 {
-    class ProductsContext : DbContext
+    public class ProductsContext : DbContext
     {
-        private DbSet<Product> _products;
+        public DbSet<Product> _products { get; set; }
 
         public ProductsContext()
         {
@@ -16,11 +16,6 @@ namespace AsyncAwait
         {
             optionsBuilder.UseSqlServer(
                 @"Server=(localdb)\mssqllocaldb;Database=Blogging;Integrated Security=True");
-        }
-
-        public IEnumerable<Product> ToList()
-        {
-            return _products.ToList();
         }
     }
 }
