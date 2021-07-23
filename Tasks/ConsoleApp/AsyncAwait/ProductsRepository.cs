@@ -38,17 +38,21 @@ namespace AsyncAwait
 
     // Task. Implement repository to use real database MsSql почитать  with Entity Framework почитать (Code First) почитать 
 
-    public class ProductRepository : IRepository<Product>
+    public class ProductRepository : IRepository<Product>, IDisposable
     {
-        private ProductsContext _context; 
-        public ProductRepository (ProductsContext conext)
+        public ProductsContext _context { get; set; }
+
+        private bool _disposed = false;
+
+        public ProductRepository(ProductsContext conext)
         {
             _context = conext;
         }
 
-        public async Task Delete (string id)
+        public async Task Delete(string id)
         {
-             _context.Remove(await GetById(id));
+            _context._products.Remove(await GetById(id));
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Product> GetById (string id)
@@ -58,13 +62,35 @@ namespace AsyncAwait
 
         public async Task Save(Product item)
         {
-            if (item is null) return;
-            await _context.AddAsync(item);
+            if (item is null)
+            {
+                return;
+            }
+
+            await _context._products.AddAsync(item);
+            await _context.SaveChangesAsync();
         }
 
         public void Dispose()
         {
-            _context?.Dispose();
+            Dispose(true);
+            //_context?.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _context?.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }
