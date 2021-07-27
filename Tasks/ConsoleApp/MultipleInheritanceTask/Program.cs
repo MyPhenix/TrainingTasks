@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MultipleInheritanceTask
 {
@@ -6,6 +7,10 @@ namespace MultipleInheritanceTask
     {
         static void Main(string[] args)
         {
+            var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            var newlist = list.Where((x, i) => x > 6 );
+
+
             Console.WriteLine("Hello World!");
         }
     }
