@@ -40,7 +40,7 @@ namespace AsyncAwait
 
     public class ProductRepository : IRepository<Product>, IDisposable
     {
-        private ProductsContext _context { get; set; }
+        private ProductsContext _context;
 
         private bool _disposed = false;
 
@@ -51,13 +51,13 @@ namespace AsyncAwait
 
         public async Task Delete(string id)
         {
-            _context._products.Remove(await GetById(id));
+            _context.Products.Remove(await GetById(id));
             await _context.SaveChangesAsync();
         }
 
         public async Task<Product> GetById (string id)
         {
-            return await _context._products.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task Save(Product item)
@@ -67,7 +67,7 @@ namespace AsyncAwait
                 return;
             }
 
-            await _context._products.AddAsync(item);
+            await _context.Products.AddAsync(item);
             await _context.SaveChangesAsync();
         }
 

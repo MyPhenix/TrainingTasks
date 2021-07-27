@@ -36,9 +36,9 @@ namespace AsyncAwait
                 // get by id first element (should be null)
                 product = await repository.GetById("1");
                 PrintProduct(product);
-            }
 
-            
+                repository.Dispose();
+            }
         }
 
         private static void PrintProduct(Product product)
