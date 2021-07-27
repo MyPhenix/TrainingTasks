@@ -40,7 +40,7 @@ namespace AsyncAwait
 
     public class ProductRepository : IRepository<Product>, IDisposable
     {
-        public ProductsContext _context { get; set; }
+        private ProductsContext _context { get; set; }
 
         private bool _disposed = false;
 
@@ -74,7 +74,6 @@ namespace AsyncAwait
         public void Dispose()
         {
             Dispose(true);
-            //_context?.Dispose();
             GC.SuppressFinalize(this);
         }
 

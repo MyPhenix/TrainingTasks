@@ -9,15 +9,9 @@ namespace AsyncAwait
 
         private string _connectionString { get; set; }
 
-        public ProductsContext(string connectionString = @"Server=(localdb)\mssqllocaldb;Database=Blogging;Integrated Security=True")
+        public ProductsContext(DbContextOptions<ProductsContext> options) : base(options)
         {
             Database.EnsureCreated();
-            _connectionString = connectionString;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Blogging;Integrated Security=True");
         }
     }
 }

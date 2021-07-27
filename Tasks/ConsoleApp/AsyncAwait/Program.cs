@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,9 +10,13 @@ namespace AsyncAwait
     {
         static async Task Main(string[] args)
         {
-            using(var contxt = new ProductsContext())
+            var contextOptions = new DbContextOptionsBuilder<ProductsContext>()
+                .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Blogging;Integrated Security=True")
+                .Options;
+
+            using (var context = new ProductsContext(contextOptions))
             {
-                ProductRepository repository = new ProductRepository(contxt);
+                ProductRepository repository = new ProductRepository(context);
                 // add 3 elements
                 var products = new List<Product>
                 {
@@ -20,7 +25,7 @@ namespace AsyncAwait
                 new Product { Id = "3", Name = "Pineapple" }
                 };
 
-                var saveTasks = products.Select(x => repository.Save(x));
+                var saveTasks =  products.Select(x => repository.Save(x));
                 //await Task.WhenAll(saveTasks).ConfigureAwait(false);
 
                 // get by id first element
